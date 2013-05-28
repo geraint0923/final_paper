@@ -1,6 +1,7 @@
 
 \documentclass[bachelor,adobefonts]{thuthesis}
 \usepackage{thutils}
+\usepackage{supertabular}
 
 
 \begin{document}
@@ -27,6 +28,16 @@
 
 \backmatter
 
+\makeatletter
+
+\listoffigures
+
+\listoftables
+
+\listofequations
+
+\makeatother
+
 %ref
 
 \bibliographystyle{thubib}
@@ -35,7 +46,7 @@
 \include{data/ack}
 
 \begin{appendix}
-\input{data/appendix}
+\input{data/appendix01}
 \end{appendix}
 
 %CV

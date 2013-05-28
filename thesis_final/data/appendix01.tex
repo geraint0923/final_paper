@@ -1,49 +1,21 @@
-\documentclass[CJK,12pt,a4paper]{article}
-\usepackage{xeCJK}
-\usepackage{amsmath}
-\usepackage{listings}
-\usepackage{fancyhdr}
-\usepackage{enumerate}
-\usepackage{supertabular}
-\usepackage{cases}
-\usepackage{supertabular}
-\usepackage{booktabs}
-\setCJKmainfont{SimSun}
-\setCJKfamilyfont{hei}{SimHei}
-\setlength{\parindent}{2.3em}
-\linespread{1.3}
-\setlength{\footskip}{1cm}
-\setlength{\textheight}{21.5cm}
-\usepackage{graphicx}
-
-\lstset{numbers=left,frame=shadowbox}
-
-\begin{document}
-\title{\CJKfamily{hei}\large 论文翻译\\
-\LARGE Keeping Kernel Performance from Regressions\\
-\CJKfamily{hei}让内核性能不再下降}
-\author{\CJKfamily{hei}翻译者\\杨\ 扬~~\CJKfamily{hei} 2009010511\\\CJKfamily{hei}清华大学\ \ \CJKfamily{hei}计95 }
-\date{2013年3月12日}
-\maketitle
 
 
-\pagestyle{fancy}
-\lhead{毕业论文开题报告－论文翻译}
-\rhead{翻译者：杨~扬~~~2009010511}
+\chapter{外文资料书面翻译}
 
-\section*{\CJKfamily{hei}摘要}
+
+\section*{摘要}
 随着每个月上千个补丁的进入，Linux内核正在不断地快速发展。为了适应这样快速的开发节奏，我们需要一种方法来确保被合并进入主线的补丁没有造成性能下降。
 
 Linux Kernel Performance项目始于2005年7月，是Intel为了确保内核的每一个发行节点都被关键的负载测试所作出的贡献。在本篇文章中，我们将介绍我们的测试基础设施、测试方法和在2.6版本内核的开发周期内的测试结果。我们也将看到历史上出现的一些性能下降的例子，以及Intel和Linux社区是如何合作解决这些这些问题，使得Linux成为一个世界级的企业操作系统。
-\section{\CJKfamily{hei}介绍}
+\section{介绍}
 最近几年，Linux的主要发行版本正在以两到三个月这样的周期进行进化，每一次的发展进化，都会有上千个的补丁被合并进入内核。Linux内核的性能和扩展性已经成为成功的关键。然而，随着内核的快速发展，一些代码引起的，没有被监测到的性能问题会随着发行版的分发而部署到产品系统中。这说明我们有必要建立一套系统在内核发布的早期就能够发现问题，并修复这些问题。
 
 Intel的开源技术中心（OTC）于2005年启动了Linux Kernel Performance（LKP）项目(http://kernel-perf.sourceforge.net)，以此满足进行常规监测内核性能的任务。一组OTC的工程师建立了测试服务器，基础设施和标准测试集合，他们已经开始对Linux内核进行测试和分析了。我们聪2005年7月开始在我们的项目网站上公布测试数据。
-\section{\CJKfamily{hei}测试过程}
+\section{测试过程}
 每一个Linux内核的发行候选版本都将会触发我们的测试基础设施，无论新的内核是在什么时候发布的，系统都将在一个小时之内运行标准测试样例。否则，如果一周之内没有-rc版本发布，我们将会在周末使用罪行的git的内核版本进行测试。测试结果每一周都将会被检查。异常的结果将会被再次检查，如果必要的话测试会重新运行。测试的结果将会被上传到一个能够用web界面访问的数据库。如果发现了任何比较大的性能变化，我们将会调查其原因并且在Linux内核的邮件列表中讨论。
 
 我们也将把我们的网站向社区成员公开，让他们能够看到每一个版本内核的性能提升和损失。最后，我们希望能够在内核主版本发布之前发现性能下降，以便性能能够得到持续性的提高。
-\subsection{\CJKfamily{hei}标准测试用例}
+\subsection{标准测试用例}
 我们将运行一组覆盖Linux内核核心功能（内存管理，I/O子系统，进程调度，文件系统，网络栈等）的标准测试用例。
 
 表1列出并描述了每个标准测试集。大部分的标准测试集都是开源的，并且能够被其他人轻易复制。
@@ -86,7 +58,7 @@ Java-business & 一个工业测试用例，测量服务器端Java的调度可扩
 \end{supertabular}
 
 
-\subsection{\CJKfamily{hei}测试平台}
+\subsection{测试平台}
 目前，我们拥有一些Itanium SMP和Xeon SMP的机器作为我们的测试平台，配置如下所列：
 
 \begin{itemize}
@@ -94,7 +66,7 @@ Java-business & 一个工业测试用例，测量服务器端Java的调度可扩
 \item 2P Intel Xeon MP processor (3.4Ghz)\item 4P Dual-Core Intel Xeon MP processor (3.0Ghz) 
 \item 2P Xeon Core$^{TM}$ 2 Duo processor (2.66Ghz)\item 2P Xeon Core$^{TM}$ 2 Quad processor (2.40Ghz)
 \end{itemize}
-\subsection{\CJKfamily{hei}测试管理}
+\subsection{测试管理}
 我们需要一个测试管理来自动在测试机器上面进行日常的标准测试集运行。尽管已经有Scalable Test Platform(http://sourceforge.net/projects/stp)和Linux Test Project(http://ltp.sourceforge.net)这样的测试管理工具，但是它们并不能满足我们所有的测试需求。我们选择编写一组shell脚本作为我们的测试管理，这将使我们能够轻易添加我们需要的新功能。
 
 我们的测试管理提供了下列的服务：
@@ -110,40 +82,40 @@ Java-business & 一个工业测试用例，测量服务器端Java的调度可扩
 我们用一个web界面来进行多个内核之间的结果比较，同时也能够审阅分析数据。可以通过web界面来重新进行测试，从而对性能的改变做确认，或者我们也可以进行自动的git-bisect命令来定位相应的补丁位置。这些结果将会在被审核之后发布在外部网站（http://kernel-perf.sourceforge.net）。
 
 
-\section{\CJKfamily{hei}性能改变}
+\section{性能改变}
 在项目运行的过程中，我们系统的测试已经发现了内核中的多个性能问题。表2是一部分性能改变的列表。在后面的讨论中，我们会针对其中的一些做详细地阐述。
-\subsection{\CJKfamily{hei}硬盘I/O}
-\subsubsection{\CJKfamily{hei}MPT Fusion Driver Bug}
+\subsection{硬盘I/O}
+\subsubsection{MPT Fusion Driver Bug}
 在2.6.13版本的内核中有一个比较严重的硬盘性能下降。一开始，我们认为这可能是和系统始终从1000Hz变为250Hz有关。在进一步的调查之后，我们发现这其实是在MPT fusion驱动的初始化代码中出现的条件竞争问题。
 
 我们的同时Ken Chen发现了在驱动的初始化中有两个线程发生了相互干扰：一个进行管理域验证，两个进行本地控制器的初始化。当出现两个本地控制器的时候，在第二个本地控制器启动以后，初始化线程临时关闭了第一个控制器的通道。然而，另一个线程中的管理域验证却在第一个通道中进行（并且有可能运行在另一个CPU）上。在管理域验证还在进行的时候关闭第一个通道导致了接下来的所有管理域验证命令全部失败。这也导致了最低的性能。Ken后来提供了一个补丁来修复这个问题。
 
-\subsection{\CJKfamily{hei}调度器}
-\subsubsection{\CJKfamily{hei}丢失处理器间中断}
+\subsection{调度器}
+\subsubsection{丢失处理器间中断}
 在2.6.15时期，在Itanium测试机上运行的Volanomark测试又60\%的吞吐率下降。这是有一个补丁导致的，在这个导致问题的补丁当中，一个被重新调度的处理器间中断在resched\_task()中没有被发送，使得重新调度的任务被推迟到下一个计时器阶段中，这也就导致了性能的损失。这个问题很快就被我们的团队报告并解决。
-\subsubsection{\CJKfamily{hei}调度器域破坏}
+\subsubsection{调度器域破坏}
 
 在进行Httpperf的测试时候，我们注意到在2.6.19版本的内核中的服务器上出现了大概80\%的不寻常变化。这是由一个缺陷导致的，这个缺陷是在cpu\_isolated\_map结构被专门设计成为一个初始化变量的时候引进的。然而，这个变量在内核初始化和启动之后并且在通过设置sched\_mc\_power\_savings策略来出发sched\_domain的重建时，仍然能够被再次访问。随后，这个出问题的sched\_domain将导致负载均衡行为，并产生不稳定的响应时间。
 
-\subsubsection{\CJKfamily{hei}楼梯调度算法}
+\subsubsection{楼梯调度算法}
 由于优雅的交互性操作方式，最近新提出的RSDL（楼梯调度算法）引起了很多的兴趣。我们对RSDL 0.31进行了测试，发现了在Volanomark测试中出现了高达30\%到80\$的减速。最后，我们发现这是由于RSDL 0.31中的“让步”语义太快以致于不能再次激活发生让步的进程。RSDL 0.33中改变了“让步”语义来允许其他进程有机会去运行，这也使得性能得到恢复。
 
-\subsection{\CJKfamily{hei}内存访问}
-\subsubsection{\CJKfamily{hei}在内核和用户控制之间复制数据}
+\subsection{内存访问}
+\subsubsection{在内核和用户控制之间复制数据}
 
 在2.6.15-rc1时期，我们在老的Xeon基于MP的处理器上进行的Netperf测试中检测到30\%的吞吐率下降。这是由于在Xeon上，内核态和用户态之间复制数据的时候串指令的速度毕基于循环的复制要慢。这个问题很快就被纠正了。后来，当更新的基于Core 2 Duo的Xen处理器上具有更高效的重复串操作指令之后，在2.6.19内核版本中使用串指令使得吞吐率上得到了比较明显的提高。
 
-\subsection{\CJKfamily{hei}其他杂项}
-\subsubsection{\CJKfamily{hei}半虚拟化}
+\subsection{其他杂项}
+\subsubsection{半虚拟化}
 半虚拟化选项在2.6.20版本中被引进，我们在Netperf和Volanomark测试中检测到了3\%的性能下降。我们发现半虚拟化已经关闭了VDSO，这导致了系统调用使用了int 0x80而不是效率更高的sysenter，而正是这导致了性能的下降。
-\subsubsection{\CJKfamily{hei}IRQ  Trace损耗}
+\subsubsection{IRQ  Trace损耗}
 当IRQ Trace特性在2.6.18-rc1版本被引进内核之后，当开启或者关闭下半区的时候，无条件地增加了local\_irq\_save(flags)和local\_irq\_restore(flags) 。这个额外的消耗导致了Netperf的UDP流测试3\%的性能损失，即使关闭IRQ Trace特性之后性能损失仍然存在。这个问题后来被检测到，并且被修复。
-\subsubsection{\CJKfamily{hei}Cache Line Bouncing}
+\subsubsection{Cache Line Bouncing}
 在2.6.18-rc14内核版本中的tbench测试中，出现了16\%的希能下降。我们发现一个代码上的变动触发了gcc 3.4.5中的一个不合适的优化对象，使得一个罕见的全局变量写操作被转化为一个常用的写事件来避免一次条件跳转。因此，在我们的分析中，CPU中的缓存行跳转增加了70\%。后来Andrew把一个补丁合并进了内核主线代码中，回避了这个gcc问题。
 
 
-\section{\CJKfamily{hei}测试方法}
-\subsection{\CJKfamily{hei}测试配置}
+\section{测试方法}
+\subsection{测试配置}
 我们试着调优我们的测试集合以便使得它们能够尽可能地使得系统资源饱和。对于一个纯CPU的测试，CPU利用率接近100\%。然而，对于涉及到I/O的测试，系统的利用率受限于用来等待文件和网络I/O的时间。每一个具体测试用例的测试参数我们都已经公布在我们的网站(http://kernel-perf.sourceforge.net/about\_tests.php)上。表3给出了每一个测试用例大致的平均负载。这些负载数据都来自于标准的vmstat。
 
 {
@@ -184,7 +156,7 @@ Volanomark & 99 & 0 & 96 & 45 & 54\\
 
 
 对于和磁盘相关的测试用例，我们把启动时的主内存降低到仅有1GB（这占我们系统内存的四分之一到八分之一）。测试文件的大小只是启动内存大小的几倍这么大。这将减少I/O管理和文件I/O缓存的影响。
-\subsection{\CJKfamily{hei}测试中的波动处理}
+\subsection{测试中的波动处理}
 性能测试中的波动是任何实验的一部分。对于系统的初始状态，比如CPU缓存，文件I/O缓存，TLB，和磁盘分布，在一定程度上都会产生影响。然而，一个大的波动将导致检测性能变化变得困难。
 
 为了减小波动，我们采取了下面的措施：
@@ -209,7 +181,7 @@ Volanomark & 99 & 0 & 96 & 45 & 54\\
 我们在基准内核上进行了大量的测试来建立测试波动值。最大值和最小值都被保存在数据库里面以便对测试用例建立置信区间。一个测试值是这样进行比较的：如果如果测试的性能结果超过了置信区间，那么我们就认为在这次的内核测试中发生了比较大的性能变化，于是我们会进行进一步的测试。总的来说，磁盘I/O密集的测试用例中的波动会更大一些，这使得很难检测到比较小的性能变化。
 
 
-\subsection{\CJKfamily{hei}分析}
+\subsection{分析}
 我们的测试管理系统会在运行测试用例的时候利用如vmstat, iostat, sar, mpstat, readprofile等分析工具收集分析数据。这些分析数据提供了来自各个方面的CPU负载信息，包括用户态应用程序和各个内核的子系统：调度器，内存，文件，网络和I/O等。关于I/O队列长度和内核常用函数的信息对我们查找内核性能瓶颈是非常有帮助的。把从vmstat中获得的等待时间和从ps中获得的wchan信息结合在一起，我们就可以得到进程耗费在等待事件上面的时间。表4给出了一个运行Aiostress和Reaim7时进程事件等待的例子。
 
 {
@@ -241,11 +213,11 @@ Volanomark & 99 & 0 & 96 & 45 & 54\\
 }
 
 
-\subsection{\CJKfamily{hei}自动git-bisect}
+\subsection{自动git-bisect}
 git的bisect是一个定位问题补丁的强有力工具。然而，手动地重复运行bisect来寻找出现bug的补丁是非常乏味的。一个人必须进行整个bisect的过程，重新编译，安装，重新启动内核，运行标准测试集来确定某个补丁导致了性能的提升还是性能的下降，然后判断两个补丁子集合中哪一个造成了性能的变化。然后在包含问题的补丁集合中重新进行上面的步骤。每两个发行候选版本之间一般会有上百个补丁，那么需要重复8到10次才能找到造成问题的补丁。我们在我们的测试管理中添加了自动进行bisect和运行标准测试的功能。以迭代复杂度为$O(\log{n})$的方法自动找到导致性能问题的补丁是非常有用的。
-\subsection{\CJKfamily{hei}结果呈现}
+\subsection{结果呈现}
 在我们的标准测试集运行i结束之后，一个封装脚本将会从每一个标准测试中收集输出信息并把这些信息放入一个CSV（逗号分割值）格式文件中，这个输出文件将会由MySQL数据库进行解析。最后的结果将会以表和和性能百分比变化比较图的形式呈现在外部网站http://kernl-perf.sourceforge.net上。我们的内部网站将显示额外的运行时数据，内核配置文件，分析结果，以及控制是否重新运行或者利用git进行bisect。
-\subsection{\CJKfamily{hei}性能索引}
+\subsection{性能索引}
 建立一个性能索引表来汇总所有来自测试用例的数据是非常有用的。我们提倡这一种方式。这就像股票交易市场中给出了大盘走势的，是根据预先定义好的权重来计算的不同角度的数据统计。
 
 {
@@ -292,13 +264,13 @@ Volanomark & 1 & 0.8 &1\\
 
 我们会使用经过几何平均权重计算的性能指标来概括每一个内核的性能。这种几何加权指标尽管有点主观，但是却是一个在总体上监测内核性能变化的有用工具，同时还能指导我们找到发生变化的基准组件。图11展示的使我们测试集合上的性能指标变化。有趣的是，从图中，我们看到，根据我们的测试，2.6版本的内核性能呈现一种上升的趋势。
 
-\section{\CJKfamily{hei}结论}
+\section{结论}
 我们的项目建立了一个内核测试基础设施，这个基础设施将会在多个平台用多个标准测试样例来测试每一个内核发行候选版本，同时也把测试的结果放在我们网站http://kernel-perf.sourceforge.net上，并向社区开放。结果，我们现在已经能够快速地捕捉到内核的性能下降，并且通过和社区合作来解决这些问题。然而，随着内核的快速发展变化，我们的日常测试只能发现一部分的性能下降。我们希望这项工作能够鼓励更多的人来做日常的和系统的Linux内核测试，防止性能下降的内核随着Linux发行版扩散出去。这将巩固Linux作为世界级企业操作系统的地位。
-\section*{\CJKfamily{hei}致谢}
+\section*{致谢}
 在此，我们对我们之前的同事Ken Chen, Rohit Seth, Vladimir Sheviakov, Davis Hart和Ben LaHaise，以及所有对项目的创建和运作进行过指导的人们表示感谢。另外，我们要特别感谢Ken，因为他是这个项目的主要推动者和主要贡献者。
-\section*{\CJKfamily{hei}法律说明}
+\section*{法律说明}
 本文的版权为Intel。需要被授予权利之后才能够进行重新发布，保留所有其他权利。
-\section*{\CJKfamily{hei}引用}
+\section*{引用}
 
 \begin{enumerate}[1)]
 \item J.E. Smith, "characterizing Computer Performance with a Single Number," Communications of ACM, 31(10): 1202-1206, October 1988. 
@@ -306,6 +278,3 @@ Volanomark & 1 & 0.8 &1\\
 \item J.R. Mashey, "Summarizing Performance is No Mean Feat" Workload Characterization Symposium, 2005. Proceedings of the IEEE International. 6-8 Oct. 2005 Page(s): 1. Digital Object Identifier 10.1109/IISWC.2005.1525995
 \item L. John, "More on finding a Single Number to indicate Overall Performance of a Benchmark Suite," Computer Architecture News, Vol. 32, No 1, pp. 3-8, March 2004.
 \end{enumerate}
-
-
-\end{document}
