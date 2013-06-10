@@ -2,12 +2,96 @@
 
 \chapter{数据的提取与处理}
 
+要检测性能回退是否出现，我们必须要从测试的环境中获取能够对性能进行判断的相关数据，即我们要进行测试数据的提取。
+
 \section{数据提取}
+
+虽然在已有的研究结果\ref{Jiang:2010:AAL:1831708.1831726}中指出使用额外的监视器来获取测试数据很有可能会造成额外的消耗从而影响测试数据的可靠性，但是在我们的测试框架中，我们采用最简单的方式来实现监视器，并且使用比较低的采样频率（一秒一次）来获取测试数据，以此来降低系统监视器对测试结果造成的影响。
 
 \subsection{系统监视器}
 
-\subsubsection{系统监视器的设计}
+系统监视器，就是以某种频率从系统中读取系统状态参数的并将其记录下来的程序。在这一部分，我将详细描述我们框架中的系统监视器的设计和实现。
+
+前面提到，在我们的测试框架中，我们将采集尽可能多的，覆盖面广的测试数据，这样，我们才进行更加细致和全面的分析，于是在我们的测试框架中，将包含表\ref{tab:monitor_type}几类的系统监视器。
+
+\begin{table}[tbp]
+\centering  % 表居中
+\tablehead{\hline
+	监视器类型 & 监视器功能\\
+	\hline \hline}
+\tabletail{\hline}
+
+\begin{supertabular}{p{3cm}p{10cm}}
+CPU类 & 用于监视和CPU相关的系统状态\\
+内存类 & 主要用于监视系统中和内存管理相关得系统参数\\
+I/O类 & 主要用于监视系统中得输入输出状态\\
+杂类 & 监控出了CPU，内存和I/O之外得其他参数\\
+\end{supertabular}
+\caption{监视器分类}
+\label{tab:monitor_type}
+\end{table}
+
+下面我们将分类介绍这些不同的系统监视器。
+\subsubsection{CPU类系统监视器}
+
+
+对于CPU类的系统监视器来说，比较重要的自然是监视系统中的CPU的负载情况和CPU负载中的不同成分（包括内核系统负载和用户态负载），在多核SMP的情况下，我们还需要分别监视每一个核的运行情况，另外，在这里，我们把进程相关的监视器也包含在CPU类系统监视器中。
+
+表\ref{tab:cpu_monitor}中列出了在我们的框架中所使用的所有CPU类系统监视器，以及它们所能够采集的数据。
+
+\begin{table}[tbp]
+\centering  % 表居中
+\tablehead{\hline
+	监视器 & 监视器功能 & 相关文件\\
+	\hline \hline}
+\tabletail{\hline}
+
+\begin{supertabular}{p{3cm}p{7cm}p{3cm}}
+interrupts & 监视系统中每一个CPU核中各种中断发生的情况 & /proc/interrupts\\
+sched\_debug & 监视系统中每一个CPU核的各种调试参数和系统信息，如时钟的频率等；此外，该监视器还监视系统中的进程运行情况，提供进程调度的相关信息 & /proc/sched\_debug\\
+softirqs & 监视系统中所有CPU核上的所有软中断情况 & /proc/softirqs\\
+proc-vmstat & 提供系统中相关内存子系统的相关信息，包括内存管理和页面切换管理等 &/proc/vmstat\\
+vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU负载状态，其中将包括 & 无\\
+\end{supertabular}
+\caption{CPU类系统监视器}
+\label{tab:cpu_monitor}
+\end{table}
+
+在操作系统中，CPU作为执行指令的工具，其功能十分复杂，中断则是CPU最重要的功能之一，了解系统的中断有助于我们了解分析系统中相关硬件和相关子系统的运行状况，在发生性能回退问题的时候能够帮助我们进行更加准确地分析和定位问题。
+
+
+\subsubsection{内存类系统监视器}
+
+内存管理是操作系统中的一个重要功能，于是内存管理子系统也成为操作系统的中最为重要的子系统之一。内存管理子系统的性能好坏也直接影响整个操作系统的性能，因此，对于一个性能测试框架来说，内存管理性能相关的参数自然是必不可少的。
+
+为了尽可能覆盖Linux内核中内存管理子系统中的相关功能，在我们的性能测试框架中，选择了表\ref{tab:mm_monitor}中列出的系统监视器为我们提供测试数据。
+
+\begin{table}[tbp]
+\centering  % 表居中
+\tablehead{\hline
+	监视器 & 监视器功能 & 相关文件\\
+	\hline \hline}
+\tabletail{\hline}
+
+\begin{supertabular}{p{3cm}p{7cm}p{3cm}}
+interrupts & 监视系统中每一个CPU核中各种中断发生的情况 & /proc/interrupts\\
+sched\_debug & 监视系统中每一个CPU核的各种调试参数和系统信息，如时钟的频率等；此外，该监视器还监视系统中的进程运行情况，提供进程调度的相关信息 & /proc/sched\_debug\\
+softirqs & 监视系统中所有CPU核上的所有软中断情况 & /proc/softirqs\\
+proc-vmstat & 提供系统中相关内存子系统的相关信息，包括内存管理和页面切换管理等 &/proc/vmstat\\
+vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU负载状态，其中将包括 & 无\\
+\end{supertabular}
+\caption{内存类系统监视器}
+\label{tab:mem_monitor}
+\end{table}
+
+
+\subsubsection{I/O类系统监视器}
+\subsubsection{杂类系统监视器}
+
 \subsubsection{系统监视器的实现}
+
+为了能够尽可能地降低系统监视器本身地额外消耗对测试结果带来地影响，我们将采用比较低的频率来进行系统参数的采样。
+
 
 \subsection{系统监视器数据的提取}
 
