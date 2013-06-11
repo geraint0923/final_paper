@@ -210,10 +210,94 @@ echo 1 > /proc/sys/kernel/latencytop
 由于在我们框架中使用了较多的系统监视器，全部分析将占用大量的篇幅，因此，在本部分，我们仅挑选几个比较有代表性的系统监视器进行分析:
 
 \begin{itemize}
-\item 
-\item 
-\item 
-\item 
+\item vmstat
+
+vmstat系统监视器的一个样例输出如下所示：
+{\footnotesize
+\begin{verbatim}
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 2  0      0 637876      0      0    0    0     0     1    0   20  0  0 100  0
+ 0  0      0 637876      0      0    0    0     0     0    0 3824  0  0 100  0
+ 0  0      0 637876      0      0    0    0     0     0    0 4205  0  0 100  0
+ 0  0      0 637876      0      0    0    0     0     0    0 3907  0  0 100  0
+ 0  0      0 637876      0      0    0    0     0     4    0 3805  0  0 100  0
+ 0  0      0 637876      0      0    0    0     0     0    0 4259  0  0 100  0
+\end{verbatim}
+vmstat的输出可以说是所有系统监视器的输出中最容易理解的了，从上面的输出中，我们
+}
+
+\item mountstats
+
+mountstats系统监视器的样例输出如下所示：
+{\footnotesize
+\begin{verbatim}
+device 192.168.1.1:/nfsroot/wfg/ mounted on / with fstype nfs statvers=1.1
+    ...
+    age:    2335810
+    caps:   caps=0x3fef,wtmult=4096,dtsize=4096,bsize=0,namlen=255
+    sec:    flavor=1,pseudoflavor=1
+    events: 555537 580173980 72882 744388 71223535 286265 688055630 3940992 269 
+81404 3818591 67423522 162973 213930 58626001 226188 144427 70699882 0 30 3938632 
+2 0 0 0 0 0 
+    bytes:  1814190108519 15212184265 0 0 2723434761 15331318197 736729 3818591 
+    RPC iostats version: 1.0  p/v: 100003/3 (nfs)
+    xprt:   tcp 952 1 1 0 0 3200064 3199728 295 926494352 0 401 194798 750103
+    per-op statistics
+            NULL: 0 0 0 0 0 0 0 0 
+         GETATTR: 555379 555461 16 96866296 62115788 4504097 2230072 6745291
+         SETATTR: 214877 214877 0 44957628 30942324 730 91946 96592
+          LOOKUP: 623804 623813 1 129116004 117001016 303705 1068289 1391401
+          ACCESS: 1098571 1099027 51 193759532 131890416 16275432 10407336 26722137
+        READLINK: 5986 5986 0 866116 812812 19 1688 1846
+            READ: 99823 99823 0 18535584 2736214956 2060 449029 454765
+           WRITE: 157756 157802 10 15360295076 21454816 3597973 4091964 7694435
+          CREATE: 72367 72368 0 20424332 19933356 60694 184047 247108
+           MKDIR: 188 188 0 39556 51756 0 63 66
+         SYMLINK: 340 340 0 78996 93840 1 173 183 
+           MKNOD: 0 0 0 0 0 0 0 0 
+          REMOVE: 582 582 0 100644 83808 2 229 241 
+           RMDIR: 4 4 0 576 576 0 1 1 
+          RENAME: 71904 71904 0 26269572 18695040 225 20431 22462
+            LINK: 14 14 0 2452 3248 0 3 3 
+         READDIR: 70 70 0 13720 283276 0 68 70
+     READDIRPLUS: 2529 2529 0 476476 7368164 8 2050 2103
+          FSSTAT: 235190 235196 2 41297852 19756128 484318 600999 1095152
+          FSINFO: 2 2 0 208 160 0 0 0 
+        PATHCONF: 1 1 0 104 56 0 0 0 
+          COMMIT: 4049 4049 0 761088 518272 130 9301 9503
+
+device devtmpfs mounted on /dev with fstype devtmpfs
+\end{verbatim}
+}
+\item buddyinfo
+
+下面使buddyinfo系统监视器的样例输出内容：
+{\footnotesize
+\begin{verbatim}
+time: 1361881488
+Node 0, zone      DMA      0      0      0      1      2      1      1      0      1      1      3   
+Node 0, zone    DMA32      8      4      6      7      4      3      5      8      7      3    738 
+Node 0, zone   Normal    172    118     51     41     11      3      1      7      1      1      4   
+Node 1, zone   Normal     61     66     24      4      0      1      1      9     11      5    922 
+time: 1361881489
+Node 0, zone      DMA      0      0      0      1      2      1      1      0      1      1      3   
+Node 0, zone    DMA32      8      4      6      7      4      3      5      8      7      3    738 
+Node 0, zone   Normal    172    118     51     41     11      3      1      7      1      1      4   
+Node 1, zone   Normal     99     65     26      5      1      1      1      9     11      5    922 
+\end{verbatim}
+}
+\item lock\_stat
+
+图\ref{fig:lock_stat}是lock\_stat的样例输出内容。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=15.3cm]{lock_stat}
+\caption{lock\_stat的样例输出}
+\label{fig:lock_stat}
+\end{figure}
+
 \end{itemize}
 
 \subsubsection{数据格式化}
