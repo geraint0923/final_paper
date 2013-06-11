@@ -50,7 +50,6 @@ I/O类 & 主要用于监视系统中得输入输出状态\\
 interrupts & 监视系统中每一个CPU核中各种中断发生的情况 & /proc/interrupts\\
 sched\_debug & 监视系统中每一个CPU核的各种调试参数和系统信息，如时钟的频率等；此外，该监视器还监视系统中的进程运行情况，提供进程调度的相关信息 & /proc/sched\_debug\\
 softirqs & 监视系统中所有CPU核上的所有软中断情况 & /proc/softirqs\\
-proc-vmstat & 提供系统中相关内存子系统的相关信息，包括内存管理和页面切换管理等 &/proc/vmstat\\
 vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU负载状态，其中将包括 & 无\\
 \end{supertabular}
 \caption{CPU类系统监视器}
@@ -64,6 +63,10 @@ vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU
 
 内存管理是操作系统中的一个重要功能，于是内存管理子系统也成为操作系统的中最为重要的子系统之一。内存管理子系统的性能好坏也直接影响整个操作系统的性能，因此，对于一个性能测试框架来说，内存管理性能相关的参数自然是必不可少的。
 
+在Linux内核中，内存管理子系统是相当复杂的。其中，在内存管理中，比较重要的一个内存管理算法就是buddy算法，buddy system正是使用了这个这个算法来管理内存，这个算法的性能好坏也直接影响到整个内存管理系统，因此我们使用了一些监视器来专门监视buddy算法的运行状况。
+
+此外，Linux内核的内存管理子系统还包括了非一致内存访问（NUMA）的管理。因此，除了监视普通的内存管理系统之外，还需要对NUMA管理系统也进行监视。
+
 为了尽可能覆盖Linux内核中内存管理子系统中的相关功能，在我们的性能测试框架中，选择了表\ref{tab:mm_monitor}中列出的系统监视器为我们提供测试数据。
 
 \begin{table}[tbp]
@@ -74,19 +77,66 @@ vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU
 \tabletail{\hline}
 
 \begin{supertabular}{p{3cm}p{7cm}p{3cm}}
-interrupts & 监视系统中每一个CPU核中各种中断发生的情况 & /proc/interrupts\\
-sched\_debug & 监视系统中每一个CPU核的各种调试参数和系统信息，如时钟的频率等；此外，该监视器还监视系统中的进程运行情况，提供进程调度的相关信息 & /proc/sched\_debug\\
-softirqs & 监视系统中所有CPU核上的所有软中断情况 & /proc/softirqs\\
+buddyinfo & 监视操作系统内存管理子系统中的Buddy内存分配算法的运行状况，其中的信息既可以用来进行性能的判断计算，还可以方便内核开发者的调试和问题定位 & /proc/buddyinfo\\
+meminfo & 监视操作系统中内存各方面的使用状况 & /proc/meminfo\\
+slabinfo & 监视内存管理子系统中SLAB算法的运行状况，功能和buddyinfo类似，可以提供测试数据，也可方便开发者的调试 & /proc/slabinfo\\
+pagetypeinfo & 和buddyinfo监视器类似，其中还收集NUMA中不同node的详细信息 & /proc/pagetypeinfo\\
+zoneinfo & 在NUMA系统中收集信息，可以得到NUMA中每一个node的详细信息 & /proc/zoneinfo\\
+numa-meminfo & 监视NUMA系统中每一个node的内存信息 & /sys/devices/system/node\\
+numa-vmstat & 收集NUMA系统中每一个node的虚拟内存信息 & /sys/devices/system/node\\
+numa-numastat & 监视NUMA中每一个node的详细运行状态 & /sys/devices/system/node\\
 proc-vmstat & 提供系统中相关内存子系统的相关信息，包括内存管理和页面切换管理等 &/proc/vmstat\\
-vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU负载状态，其中将包括 & 无\\
 \end{supertabular}
 \caption{内存类系统监视器}
 \label{tab:mem_monitor}
 \end{table}
 
 
+
 \subsubsection{I/O类系统监视器}
+
+输入输出（I/O）几乎是计算机里最为重要的一部分了，同样，对于一个操作系统来说，输入输出（I/O）子系统同样也是最为重要的一部分。
+
+一般，I/O子系统一般包括外设的输入输出和网络操作，我们选择的系统监视器也将监视这几个方面的测试数据。
+
+表\ref{tab:io_monitor}中列出了我们的测试框架中使用的I/O类系统监视器。
+
+\begin{table}[tbp]
+\centering  % 表居中
+\tablehead{\hline
+	监视器 & 监视器功能 & 相关文件\\
+	\hline \hline}
+\tabletail{\hline}
+
+\begin{supertabular}{p{3cm}p{7cm}p{3cm}}
+mountstats & 监视操作系统中文件系统的挂载情况，其中会给出NFS文件系统的详细运行状态，这可以对操作系统中NFS的性能进行比较详细的监视 & /proc/self/mountstats\\
+nfsstat & 这是Linux系统中常用的一款NFS状态查看工具，我们将其封装成一个完整的系统监视器，可以对NFS的运行状态进行详细的汇报，有助于进行性能分析 & 无\\
+iostat & 同样也是一款Linux的常用工具，其作用在于 & 无\\
+\end{supertabular}
+\caption{I/O类系统监视器}
+\label{tab:io_monitor}
+\end{table}
+
+
 \subsubsection{杂类系统监视器}
+
+除了CPU类，内存类以及I/O类三类系统监视器之外，我们还选用了一些同样非常有用的监视器，这些监视器能够帮助我们更加方便和快速地分析和定位问题，表\ref{tab:misc_monitor}
+
+\begin{table}[tbp]
+\centering  % 表居中
+\tablehead{\hline
+	监视器 & 监视器功能 & 相关文件\\
+	\hline \hline}
+\tabletail{\hline}
+
+\begin{supertabular}{p{3cm}p{7cm}p{3cm}}
+lock\_stat &  & /proc/lock\_stat\\
+latency\_stats & 同样也是一款Linux的常用工具，其作用在于 & /proc/latency\_stats\\
+\end{supertabular}
+\caption{杂类系统监视器}
+\label{tab:misc_monitor}
+\end{table}
+
 
 \subsubsection{系统监视器的实现}
 
