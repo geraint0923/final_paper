@@ -224,8 +224,8 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
  0  0      0 637876      0      0    0    0     0     4    0 3805  0  0 100  0
  0  0      0 637876      0      0    0    0     0     0    0 4259  0  0 100  0
 \end{verbatim}
-vmstat的输出可以说是所有系统监视器的输出中最容易理解的了，从上面的输出中，我们
 }
+vmstat的输出可以说是所有系统监视器的输出中最容易理解的了，从上面的输出中，我们可以看到输出的信息分为6个部分，分别涉及进程管理，内存管理，页面交换，I/O管理，内核管理和CPU负载等方面，其中r表示进程中等待运行的进程队列长度，b表示阻塞的进城队列长度，系统部分的in表示每秒钟内发生的中断数，cs表示上下文切换的次数。
 
 \item mountstats
 
@@ -270,6 +270,81 @@ device 192.168.1.1:/nfsroot/wfg/ mounted on / with fstype nfs statvers=1.1
 device devtmpfs mounted on /dev with fstype devtmpfs
 \end{verbatim}
 }
+对于mountstats的输出结果，我们需要关注的只是那些可以比较的数字型数据，比如events，bytes，GETATTR，SETATTR等后面的数字都是我们需要关注的数据，我们需要了解这些数字所代表的含义才能将这样的输出结果进行格式化。
+
+通过在Linux内核源代码中搜索mountstats关键词，我们可以找到：
+{\footnotesize
+\begin{lstlisting}[language=C,caption=fs/proc/base.c]
+	REG("mountstats", S_IRUSR, proc_mountstats_operations),
+	...
+static const struct file_operations proc_mountstats_operations = {
+   	.open       = mountstats_open,
+	.read       = seq_read,
+	.llseek     = seq_lseek,
+	.release    = mounts_release,
+};
+\end{lstlisting}
+}
+接下来，我们跟踪函数mountstats\_open，并找到NFS的相关输出函数：
+{\footnotesize
+\begin{lstlisting}[language=C,caption=fs/nfs/super.c]
+...
+static const struct super_operations nfs_sops = {
+    ...
+    .show_stats = nfs_show_stats,
+    ...
+};
+...
+/*
+ * Present statistical information for this VFS mountpoint
+ */
+static int nfs_show_stats(struct seq_file *m, struct vfsmount *mnt)
+{
+    ...
+    seq_printf(m, "\n\tevents:\t");
+    for (i = 0; i < __NFSIOS_COUNTSMAX; i++)
+        seq_printf(m, "%lu ", totals.events[i]);
+    seq_printf(m, "\n\tbytes:\t");
+    for (i = 0; i < __NFSIOS_BYTESMAX; i++)
+        seq_printf(m, "%Lu ", totals.bytes[i]);
+#ifdef CONFIG_NFS_FSCACHE
+    if (nfss->options & NFS_OPTION_FSCACHE) {
+        seq_printf(m, "\n\tfsc:\t");
+        for (i = 0; i < __NFSIOS_FSCACHEMAX; i++)
+            seq_printf(m, "%Lu ", totals.bytes[i]);
+    }
+#endif
+    seq_printf(m, "\n");
+
+    rpc_print_iostats(m, nfss->client);
+
+    ...
+}
+\end{lstlisting}
+}
+通过跟踪\_\_NFSIOS\_COUNTSMAX，我们可以找到：
+{\footnotesize
+\begin{lstlisting}[language=C,caption=include/linux/nfs\_iostat.h]
+enum nfs_stat_bytecounters {
+    ...
+    NFSIOS_WRITEPAGES,
+    __NFSIOS_BYTESMAX,
+};
+...
+enum nfs_stat_eventcounters {
+    ...
+    NFSIOS_PNFS_READ,
+    NFSIOS_PNFS_WRITE,
+    __NFSIOS_COUNTSMAX,
+};
+\end{lstlisting}
+}
+于是，我们就已经找到了event和bytes字段中每一个数字的具体含义。
+
+同理，我们能够通过类似的方法找到GETATTR和SETATTR等字段中每个数字的具体含义。
+
+据此，我们对mountstats系统监视器的输出结果做格式化。
+
 \item buddyinfo
 
 下面使buddyinfo系统监视器的样例输出内容：
@@ -287,6 +362,8 @@ Node 0, zone   Normal    172    118     51     41     11      3      1      7   
 Node 1, zone   Normal     99     65     26      5      1      1      1      9     11      5    922 
 \end{verbatim}
 }
+在查询了相关的资料\cite{buddyinfo}之后
+
 \item lock\_stat
 
 图\ref{fig:lock_stat}是lock\_stat的样例输出内容。
