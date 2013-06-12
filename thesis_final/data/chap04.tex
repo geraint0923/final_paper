@@ -362,8 +362,11 @@ Node 0, zone   Normal    172    118     51     41     11      3      1      7   
 Node 1, zone   Normal     99     65     26      5      1      1      1      9     11      5    922 
 \end{verbatim}
 }
-在查询了相关的资料\cite{buddyinfo}之后
+在查询了相关的资料\cite{buddyinfo}之后，我们知道DMA，DMA32等指的是内存的类型，后面的数字指的是buddy算法中不同大小的块的个数。
 
+比如，对于上面输出的第三行，对于DMA32，系统中有8个$2^0*$PAGE\_SIZE大小的块，4个$2^1*$PAGE\_SIZE大小的块，6个$2^2*$PAGE\_SIZE大小的块……
+
+因此，通过buddyinfo这个系统监视器，我们可以很轻易地知道系统中buddy内存分配算法的运行状况。
 \item lock\_stat
 
 图\ref{fig:lock_stat}是lock\_stat的样例输出内容。
@@ -374,6 +377,21 @@ Node 1, zone   Normal     99     65     26      5      1      1      1      9   
 \caption{lock\_stat的样例输出}
 \label{fig:lock_stat}
 \end{figure}
+
+在前面的部分，已经提到lock\_stat记录的是系统中所使用的锁的详细状态。从图\ref{fig:lock_stat}中，我们能够看到：
+\begin{enumerate}
+\item 系统中不同的锁的状况被长虚线分隔开
+\item 属于每一个锁的区域中，第一行是该锁的各项统计数据
+\item 最左边是这个锁的名称
+\item 第二列表示的是被使用的次数
+\item 第三列指的是被使用的函数所在的内存地址
+\item 最后一列表示的是这个锁被使用的函数名称和被调用的代码相对偏移
+\end{enumerate}
+这些信息对于进行锁的使用分析都是非常必要的。
+
+但是对于性能的分析，我们重点关注的是量化的数字型信息，其他的信息可以不去关注，比如锁的被调用函数名，被调用函数的地址以及调用代码的相对偏移等，这些都是可以忽略的信息。
+
+我们在分析lock\_stat这个系统监视器输出的信息的时候，会对每一个锁的调用情况进行分析，结果放到格式化的输出中。
 
 \end{itemize}
 
