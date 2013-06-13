@@ -403,18 +403,84 @@ Node 1, zone   Normal     99     65     26      5      1      1      1      9   
 由于我们进行开发的主要语言是Ruby，而在最新的Ruby中，已经内置了一种简单易懂的数据序列化的保存格式，即YAML。在YAML中，可以保存键值对，可以保存数组和矩阵，更重要的是YAML格式是一种简单易懂的格式，可以被人直接识别，这样可以在很大的程度上降低开发的成本，并且提高开发的效率。因此，在我们的框架中，使用YAML作为所有数据的保存格式。
 
 在YAML中，要表示一组键值对，一般采用下面的格式：
-\begin{verbatim}
+\begin{center}
 Key: Value
-\end{verbatim}
+\end{center}
 也就是，在每一组键值对中，键在左边，然后紧跟一个冒号和空格，后面接着和该键对应的值。
 
+在本部分，主要介绍将系统监视器的输出内容格式化为基本的YAML格式，而进一步的处理将会在下一部分中进行介绍。
 
+在YAML中，每一项一般都需要有一个键，为了方便识别和开发，我们采用下面的格式来给每一项进行命名：
+\begin{center}
+Field.Subfield.Subsubfield.Name
+\end{center}
+即从左到右不断用该属性所在的域作为后缀，直到到达该键的属性名称。
+
+在对系统键时期的输出结果进行解析的过程中，遇到的时间戳全部都按照原样输出到格式化结果中。
+
+此外，对于每一个不同的系统监视器X，我们都会创建一个名为X.yaml的文件来保存系统监视器X输出内容的格式化结果。
+
+根据上面提到的这些格式化原则， 我们对前面列出的vmstat输出内容的格式化结果为文件vmstat.yaml，而文件vmstat.yaml中的具体内容为：
+{\footnotesize
+\begin{verbatim}
+time: 0.123456
+procs.r: 2
+procs.b:0
+memory.swapd: 0
+memory.free 63876
+memory.buff: 0
+memory.cache: 0
+swap.si: 0
+swap.so: 0
+io.bi: 0
+io.bo: 1
+system.in: 0
+system.cs: 20
+cpu.us: 0
+cpu.sy: 0
+cpu.id: 100
+cpu.wa: 0
+time: 1.123456
+procs.r: 0
+...
+...
+...
+\end{verbatim}
+}
+
+同理，对于lock\_stat系统监视器的输出内容进行格式化会得到文件lock\_stat.yaml，其中的内容为：
+{\footnotesize
+\begin{verbatim}
+time: 0.123456
+procs.r: 2
+procs.b:0
+memory.swapd: 0
+memory.free 63876
+memory.buff: 0
+memory.cache: 0
+swap.si: 0
+swap.so: 0
+io.bi: 0
+io.bo: 1
+system.in: 0
+system.cs: 20
+cpu.us: 0
+cpu.sy: 0
+cpu.id: 100
+cpu.wa: 0
+time: 1.123456
+procs.r: 0
+...
+...
+...
+\end{verbatim}
+}
 
 \section{数据处理}
 
 \subsection{数据分析与保存}
-
+使用YAML格式保存成矩阵。
 
 \subsection{数据的可视化比较}
 
-
+使用GnuPlot进行画图。
