@@ -472,14 +472,56 @@ time: 1.123456
 \end{verbatim}
 }
 
-\section{数据处理}
+\section{测试数据处理}
 
 上一个部分中，已经描述了如何对系统监视器的输出内容进行分析并格式化成YAML格式。对于每一个在测试中执行了监控任务了的系统监视器，在进行系统监视器输出格式化之后都会得到一个以该监视器命名的YAML文件，在这一部分中，我们将会对测试的结果进行进一步的处理和分析。
 
-\subsection{数据分析与保存}
+\subsection{测试数据保存}
 
+为了方便测试数据的管理和保存，在我们的测试框架中，测试的结果都是以文件的形式进行保存的。
 
+在中心任务管理的服务器上，我们创建了一个文件夹专门用于保存所有的测试结果，如
+\begin{center}
+/test\_result
+\end{center}
+接下来，我们将根据测试时所使用的测试例程进行分类，根据不同的测试例程分类创建不同的目录，例如在我们的框架中有一个比较简单的测试，是使用Linux系统中自带的dd命令来创建一个比较大的文件，以此来测试I/O的吞吐性能，那么我们将创建一个目录，如
+\begin{center}
+/test\_result/micro/dd-write
+\end{center}
 
-\subsection{数据的可视化比较}
+在我们的测试框架中，我们还会在不同的测试环境中进行测试，而在不同的测试环境中进行的测试的测试结果之间显然是没有可比性的，因此，我们还会根据测试环境的不同进行进一步的结果划分，而这种划分将会在文件系统上面得到体现，比如，我们要在只有一个硬盘的机器中分别使用ext4和xfs两种不同的文件系统进行测试，并且在每一次的测试中使用10个dd命令进行测试，那么我们会继续创建下面的目录：
+\begin{center}
+/test\_result/micro/dd-write/1HDD-ext4-10dd
+
+/test\_result/micro/dd-write/1HDD-xfs-10dd
+\end{center}
+
+接下来，我们会根据进行测试的内核版本创建不同的目录，这里的版本指的是在Linux源代码管理的git树中的commit ID，这个commit ID可以帮助我们定位到Linux内核代码树中的每一次的代码修改和更新。假设某一次的commit ID为：
+\begin{center}
+8bb9660418e05bb1845ac1a2428444d78e322cc7
+\end{center}
+那么，我们创建下面的文件夹：
+\begin{center}
+\footnotesize
+/test\_result/micro/dd-write/1HDD-ext4-10dd/8bb9660418e05bb1845ac1a2428444d78e322cc7
+\end{center}
+用来保存该次代码修改之后的内核的性能测试结果。
+
+对于同一个版本的内核，我们很有可能会进行多次的测试，因此，我们会根据测试的次数在对应版本的目录内创建子目录来保存每次测试的测试结果，假设我们进行了3次测试，那么我们创建下面的目录：
+
+\begin{center}
+\footnotesize
+/test\_result/micro/dd-write/1HDD-ext4-10dd/8bb9660418e05bb1845ac1a2428444d78e322cc7/1
+
+/test\_result/micro/dd-write/1HDD-ext4-10dd/8bb9660418e05bb1845ac1a2428444d78e322cc7/2
+
+/test\_result/micro/dd-write/1HDD-ext4-10dd/8bb9660418e05bb1845ac1a2428444d78e322cc7/3
+\end{center}
+
+这样，我们通过这样的目录结构即可对比较复杂的测试结果进行简单清晰地管理，直接使用操作系统自带的文件系统，相对于使用复杂的数据库来说，一方面减少了实现实现上面的复杂度，另一方面减少了对其他组件（如数据库组建）的以来，能够使得整个测试框架更为简洁明了。
+
+\subsection{测试数据的汇总处理}
+
+\subsection{测试数据的可视化比较}
 
 使用GnuPlot进行画图。
