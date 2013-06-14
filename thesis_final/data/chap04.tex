@@ -389,7 +389,7 @@ Node 1, zone   Normal     99     65     26      5      1      1      1      9   
 \end{enumerate}
 这些信息对于进行锁的使用分析都是非常必要的。
 
-但是对于性能的分析，我们重点关注的是量化的数字型信息，其他的信息可以不去关注，比如锁的被调用函数名，被调用函数的地址以及调用代码的相对偏移等，这些都是可以忽略的信息。
+但是对于性能的分析，我们重点关注的是量化的数字型信息，其他的信息可以不去关注，比如锁的被调用函数的地址以及调用代码的相对偏移等，这些都是可以忽略的信息。
 
 我们在分析lock\_stat这个系统监视器输出的信息的时候，会对每一个锁的调用情况进行分析，结果放到格式化的输出中。
 
@@ -452,24 +452,20 @@ procs.r: 0
 {\footnotesize
 \begin{verbatim}
 time: 0.123456
-procs.r: 2
-procs.b:0
-memory.swapd: 0
-memory.free 63876
-memory.buff: 0
-memory.cache: 0
-swap.si: 0
-swap.so: 0
-io.bi: 0
-io.bo: 1
-system.in: 0
-system.cs: 20
-cpu.us: 0
-cpu.sy: 0
-cpu.id: 100
-cpu.wa: 0
+&(&zone->lru_lock)->rlock.con-bounces: 112589
+&(&zone->lru_lock)->rlock.contentions: 1145183
+&(&zone->lru_lock)->rlock.waittime-min: 0.12
+&(&zone->lru_lock)->rlock.waittime-max: 96.85
+&(&zone->lru_lock)->rlock.waittime-total: 6551407.23
+&(&zone->lru_lock)->rlock.acq-bounces: 1224031
+&(&zone->lru_lock)->rlock.holdtime-min: 0.10
+&(&zone->lru_lock)->rlock.holdtime-max: 5.01
+&(&zone->lru_lock)->rlock.holdtime-total: 600953.96
+&(&zone->lru_lock)->rlock.contentions.____pagevec_lru_add: 29
+&(&zone->lru_lock)->rlock.contentions.release_pages: 32
+&(&zone->lru_lock)->rlock.contentions.activate_page: 2290305
+...
 time: 1.123456
-procs.r: 0
 ...
 ...
 ...
@@ -478,8 +474,11 @@ procs.r: 0
 
 \section{数据处理}
 
+上一个部分中，已经描述了如何对系统监视器的输出内容进行分析并格式化成YAML格式。对于每一个在测试中执行了监控任务了的系统监视器，在进行系统监视器输出格式化之后都会得到一个以该监视器命名的YAML文件，在这一部分中，我们将会对测试的结果进行进一步的处理和分析。
+
 \subsection{数据分析与保存}
-使用YAML格式保存成矩阵。
+
+
 
 \subsection{数据的可视化比较}
 
