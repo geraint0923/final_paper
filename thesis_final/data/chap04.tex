@@ -551,11 +551,48 @@ vmstat.procs.r: [ 2, 1, 3 ]
 另外，对于每一个进行测试的内核，在对应commit ID的文件夹下都会有一个名为matrix,yaml文件用来汇总所有stats.yaml中的数据。
 
 在后面的性能回退算法中，我们还会介绍进一步的数据处理步骤。
-\subsection{测试数据的可视化比较}
+\subsection{测试数据的比较}
 在我们的测试框架中，我们除了能够进行自动化的性能回退判断分析，还可以提供方便人工分析的图表比较功能。
 
-在实现上，我们会通过读取stats.yaml和avg.yaml来进行分析和比较，在画图方面，我们将使用GnuPlot来进行画图。通过stats.yaml和avg.yaml，我们可以进行同一个内核多次测试的比较，也可以进行不同内核的测试平均值的比较，还能比较不同的测试参数下的测试结果。
+\subsubsection{表格比较}
+在实现上，我们会通过读取stats.yaml和avg.yaml来进行分析和比较。通过stats.yaml和avg.yaml，我们可以进行同一个内核多次测试的比较，也可以进行不同内核的测试平均值的比较，还能比较不同的测试参数下的测试结果:
+\begin{enumerate}
+\item 不同测试参数和不同内核版本的比较。图\ref{fig:run_fs}中描述的是不同文件系统下不同的版本内核的测试结果，其中比较的是ext4和xfs这两种文件系统的磁盘读写性能，纵向是不同内核版本的，另外，在这里我们将不同文件系统称为不同测试参数而不是不同内核配置是因为，在这些不会互相冲突的编译选项上，我们一般都会全部选上，而在挂载实际的硬盘时进行区分，而具体挂载什么文件系统的硬盘则是由测试参数决定的。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=15cm]{run_fs}
+\caption{不同文件系统的多版本内核比较}
+\label{fig:run_fs}
+\end{figure}
+
+\item 不同内核版本的多次测试比较。图\ref{fig:run_multipletimes}中描述的是不同版本内核进行多次运行的比较结果，每个版本的内核进行了最多3次的测试对于没有进行测试那一组数据，我们以零值进行填充。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=15cm]{run_multipletimes}
+\caption{多版本内核的多次测试比较}
+\label{fig:run_multipletimes}
+\end{figure}
+
+\end{enumerate}
+
+\subsubsection{可视化比较}
+
+为了能够更加直观地表现出数据之间的关系，我们还提供了作图比较的功能，该功能我们使用GnuPlot实现，图\ref{fig:fs_compare}和图\ref{times_compare}分别表现的是不同前面两组数据的图像比较。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6cm]{fs_compare}
+\caption{多版本内核的多次测试比较}
+\label{fig:fs_compare}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=6cm]{times_compare}
+\caption{多版本内核的多次测试比较}
+\label{fig:times_compare}
+\end{figure}
 
 
-
-使用GnuPlot进行画图。
