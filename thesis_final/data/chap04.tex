@@ -170,10 +170,19 @@ time: B
 ...
 \end{verbatim}
 
-于是，我们的测试框架中系统监视器的实现用伪代码可以表示为：
+于是，我们的测试框架中大部分系统监视器的实现用伪代码可以表示为：
 
 
-
+\begin{algorithm}
+\caption{系统监视器实现伪代码}
+\KwIn{Interval}
+\While{true}
+{
+     print "time: " + 时间戳\;
+     printFile /proc目录下面的相关状态文件\;
+     sleep Interval\;
+}
+\end{algorithm}
 
 
 
