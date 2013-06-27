@@ -67,7 +67,7 @@ vmstat & 使用Linux中自带的常用工具vmstat来获取当前系统中的CPU
 
 此外，Linux内核的内存管理子系统还包括了非一致内存访问（NUMA）的管理。因此，除了监视普通的内存管理系统之外，还需要对NUMA管理系统也进行监视。
 
-为了尽可能覆盖Linux内核中内存管理子系统中的相关功能，在我们的性能测试框架中，选择了表\ref{tab:mm_monitor}中列出的系统监视器为我们提供测试数据。
+为了尽可能覆盖Linux内核中内存管理子系统中的相关功能，在我们的性能测试框架中，选择了表\ref{tab:mem_monitor}中列出的系统监视器为我们提供测试数据。
 
 \begin{table}[tbp]
 \centering  % 表居中
@@ -175,7 +175,7 @@ time: B
 
 \begin{algorithm}
 \caption{系统监视器实现伪代码}
-\KwIn{Interval}
+\KwIn{采样时间间隔$Interval$}
 \While{true}
 {
      print "time: " + 时间戳\;

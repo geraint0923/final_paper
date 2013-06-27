@@ -21,16 +21,18 @@
 
 
 \begin{cabstract}
-在这个信息技术行业高速发展的年代，软件的开发方式逐渐发生改变，软件的开发速度也越来越快，而且软件的代码量也逐渐增多，同时社会对软件质量的要求也是越来越高，这样也就相应地提高了对软件开发管理的要求，其中对软件性能的要求更为苛刻，而操作系统作为一种使用率极高的系统软件，对性能的控制和管理更是追求极致，特别是像Linux这样贡献者众多开源操作系统，因此，设计并开发一个能够比较快速地进行Linux性能测试并且从中定位出问题的测试系统是很有意义的并且也是非常有必要的。
+在这个信息技术行业高速发展的年代，软件的开发速度也越来越快，而且软件的代码量也逐渐增多，同时社会对软件质量的要求也是越来越高，这样也就相应地提高了对软件开发管理的要求，其中对软件性能的要求更为苛刻，而操作系统作为一种使用率极高的系统软件，特别是像Linux这样贡献者众多开源操作系统，对性能的控制和管理更是追求极致，因此，设计并开发一个能够比较快速地进行Linux性能测试并且从中定位出问题的测试系统是很有必要的。
 
-本文中针对Linux内核的发展趋势和开发模式，设计了一套对Linux内核性能进行高效测试的测试框架。在本文设计的这一套测试框架中，可以进行多方面的性能测试，并在测试的过程中以尽可能低的系统性能消耗来采集大量的系统性能数据，然后对采集到的数据进行合理的判断，在数据的处理和分析上，通过一定的方式做到尽可能完整的分析和判断，并利用Linux内核代码的版本管理工具git来进行不同版本和不同分支上的代码测试，从而在出现性能问题之后帮助开发者定位问题的所在，大大减轻Linux内核开发者的开发和测试负担，提高Linux内核的开发效率，并有可能提前发现一些潜在的性能回退问题，有效降低发行版的Linux内核出现性能问题的可能性。
+本文中设计了一套对Linux内核性能进行高效测试的测试框架。在本文设计的这一套测试框架中，可以进行多方面的性能测试，并在测试的过程中采集大量的系统性能数据，然后对采集到的数据进行合理的判断。本文的测试框架将利用Linux内核代码的版本管理工具git来进行不同版本和不同分支上的代码测试，从而在出现性能问题之后帮助开发者定位问题的所在，大大减轻Linux内核开发者的开发和测试负担，提高Linux内核的开发效率，并有可能提前发现一些潜在的性能回退问题。
 \end{cabstract}
 
 \ckeywords{Linux, 测试, 性能回退, 框架}
 
 
 \begin{eabstract}
-this is english abstract
+With the development of the Information Technology, the speed of software development is becoming faster and faster, the scale of software is becoming larger and larger, and the requirement of the quality is becoming higher and higher. Operating system,  which is a kind of system software commonly used in our computers, has extreme requirement on the control and the management of performance, especially for Linux, an open source operating system which has a lot of contributors. Therefore, it is necessary to design and develop a performance testing framework for Linux to locate the bugs and the performance regressions.
+
+In this thesis, we propose a performance testing framework to evaluate the Linux kernel efficiently. Our framework is able to perform various kinds of performance test and do the analysis and the judgement using the collected data. Using git, the version control system of Linux kernel, our framework applies testing on different versions and branches, to help the developers locate the bugs and the performance regressions. It could greatly diminish the burden of developers, improve the efficiency of the development, and discover the potential performance regressions in Linux kernel.
 \end{eabstract}
 
 \ekeywords{Linux, Testing, Performance Regression, Framework}

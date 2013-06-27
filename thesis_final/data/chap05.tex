@@ -16,7 +16,7 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=10cm]{variation}
-\caption{性能测试中的波动}
+\caption{性能测试中的波动\cite{chen2007keeping}}
 \label{fig:variation}
 \end{figure}
 
@@ -60,10 +60,11 @@ m<x<M
 \end{equation}
 如果满足式\ref{equ:pr-judge}，那么我们可以认为本次测试的结果是在正常的范围内，不用进行bisect；否则，我们认为本次测试的结果是不正常的，通报异常，然后根据是否是性能回退来决定是否进行bisect操作。
 
-用伪代码表示为：
+用伪代码表示为算法\ref{alg:old_alg}。
 
 \begin{algorithm}
 \caption{性能回退判断算法}
+\label{alg:old_alg}
 \KwIn{历史测试数据集合 $Hist$, 本次测试结果$x$}
 \KwOut{是否异常$isException$}
 $isException$ = false\;
@@ -97,10 +98,11 @@ x \leq x_{mid}
 \end{equation}
 如果式\ref{equ:pr-bisect}是成立的，那么说明本次测试的结果比较靠近出现问题的版本，那么我们将把本次测试的版本也标记为出现问题，即bad；否则，说明本次测试de结果靠近没有问题的版本，那么将该版本标记为没有问题，即good。
 
-用伪代码表示为：
+用伪代码表示为算法\ref{alg:bisect_alg}。
 
 \begin{algorithm}
 \caption{bisect过程中的判断算法}
+\label{alg:bisect_alg}
 \KwIn{好的测试数据$x_{good}$, 坏的测试数据$x_{bad}$, 当前测试数据$x$}
 \KwOut{当前数据是否是好的$isGood$}
 $isGood$ = true\;
@@ -143,11 +145,12 @@ return $isGood$\;
 git tag --points-at \$COMMIT\_ID
 \end{center}
 
-在优化之后，性能回退判断算法的伪代码为：
+在优化之后，性能回退判断算法的伪代码为算法\ref{alg:opt_alg}。
 
 
 \begin{algorithm}
 \caption{优化后的性能回退判断算法}
+\label{alg:opt_alg}
 \KwIn{历史测试数据集合 $Hist$, 本次测试结果$x$, 当前版本$V$}
 \KwOut{是否异常$isException$}
 $isException$ = false\;
