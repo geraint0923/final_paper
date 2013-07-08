@@ -170,11 +170,12 @@ time: B
 ...
 \end{verbatim}
 
-于是，我们的测试框架中大部分系统监视器的实现用伪代码可以表示为：
+于是，我们的测试框架中大部分系统监视器的实现用伪代码可以表示为算法\ref{alg:m_alg}。
 
 
 \begin{algorithm}
 \caption{系统监视器实现伪代码}
+\label{alg:m_alg}
 \KwIn{采样时间间隔$Interval$}
 \While{true}
 {
@@ -428,6 +429,7 @@ Field.Subfield.Subsubfield.Name
 在对系统键时期的输出结果进行解析的过程中，遇到的时间戳全部都按照原样输出到格式化结果中。
 
 此外，对于每一个不同的系统监视器X，我们都会创建一个名为X.yaml的文件来保存系统监视器X输出内容的格式化结果。
+
 
 根据上面提到的这些格式化原则， 我们对前面列出的vmstat输出内容的格式化结果为文件vmstat.yaml，而文件vmstat.yaml中的具体内容为：
 {\footnotesize

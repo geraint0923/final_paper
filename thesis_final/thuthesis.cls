@@ -559,7 +559,11 @@
       \ifthu@secret\hfill{\sihao\thu@secretlevel\thu@secret@content}\else\rule{1cm}{0cm}\fi}
     \ifthu@bachelor
       \vskip0.45cm
-      {\yihao\lishu\ziju{0.3846}\thu@schoolname}
+%      {\yihao\lishu\ziju{0.3846}\thu@schoolname}
+
+	\setCJKfamilyfont{zhli}{LiSu}
+      {\yihao\CJKfamily{zhli}\ziju{0.3846}\thu@schoolname}
+
       \par\vskip1.5cm
       {\xiaochu\heiti\ziju{0.5}\thu@bachelor@subtitle}
       \vskip2.2cm
